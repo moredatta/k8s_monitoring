@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: spring-boot-prometheus
+  namespace: monitoring
+spec:
+  selector:
+    app: spring-boot-prometheus
+  ports:
+    - port: 8080
+      targetPort: 8080
+      nodePort:
+  type: NodePort

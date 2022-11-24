@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prom-deployment
+  namespace: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: prom-app
+  template:
+    metadata:
+      labels:
+        app: prom-app
+    spec:
+      containers:
+      - name: prom
+        image: moredatta574/prom:latest
+        ports:
+        - containerPort: 5000

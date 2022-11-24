@@ -1,0 +1,87 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: alertmanager
+  namespace: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: alertmanager
+  template:
+    metadata:
+      name: alertmanager
+      labels:
+        app: alertmanager
+    spec:
+      containers:
+      - name: alertmanager
+        image: prom/alertmanager:latest
+        args:
+          - "--config.file=/etc/alertmanager/config.yml"
+          - "--storage.path=/alertmanager"
+        ports:
+        - name: alertmanager
+          containerPort: 9093
+        volumeMounts:
+        - name: config-volume
+          mountPath: /etc/alertmanager
+      volumes:
+      - name: config-volume
+        configMap:
+          name: alertmanager-config
+    
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: alertmanager-config
+  namespace: prometheus
+data:
+  config.yml: |-
+    route:
+     receiver: 'slack-notifications'
+   
+     routes:
+       - match:
+           severity: warning
+         continue: true
+         receiver: 'slack-notifications'
+      #  - match:
+      #      severity: warning
+      #    receiver: 'email-me'
+      
+    receivers:
+    - name: 'slack-notifications'
+      slack_configs:
+      - api_url: 'https://hooks.slack.com/services/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'
+        channel: '#general'
+
+    # - name: 'email-me'
+    #   email_configs:
+    #   - to: moredatta574@gmail.com
+    #     from: dattatray.more@gslab.com
+    #     smarthost: smtp.gmail.com:587
+    #     auth_username: "dattatray.more@gslab.com"
+    #     auth_identity: "dattatray.more@gslab.com"
+    #     auth_password: "pivjmvymbqgroysp"
+    #     send_resolved:  true  
+      
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: alertmanager
+  namespace: prometheus
+  annotations:
+      prometheus.io/scrape: 'true'
+      prometheus.io/port:   '9093'
+spec:
+  selector: 
+    app: alertmanager
+  type: NodePort  
+  ports:
+    - port: 9093
+      targetPort: 9093
+      nodePort: 31430

@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prom2-deployment
+  namespace: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: prom2-app
+  template:
+    metadata:
+      labels:
+        app: prom2-app
+    spec:
+      containers:
+      - name: prom2
+        image: moredatta574/prom2:latest
+        ports:
+        - containerPort: 7000

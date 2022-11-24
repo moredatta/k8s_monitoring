@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logger-deployment
+  namespace: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: logger-app
+  template:
+    metadata:
+      labels:
+        app: logger-app
+    spec:
+      containers:
+      - name: logger-app
+        image: moredatta574/logger:latest
+        volumeMounts:
+          - mountPath: ./logger
+            name: logger-volume
+        ports:
+        - containerPort: 9050
+
+      
+      volumes:
+        - name: logger-volume
+          persistentVolumeClaim:
+            claimName: logger-pvc

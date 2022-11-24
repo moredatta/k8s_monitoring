@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: prom2-service
+  namespace: prometheus
+spec:
+  selector:
+    app: prom2-app
+  type: NodePort
+  ports:
+  - name: metrics
+    port: 7000
+    targetPort: 7000
+    nodePort: 30800
