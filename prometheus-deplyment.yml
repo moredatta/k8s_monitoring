@@ -94,7 +94,7 @@ spec:
   selector:
     app: prometheus
     tier: backend
-  type: NodePort
+  type: LoadBalancer
 
 ---
 apiVersion: v1
