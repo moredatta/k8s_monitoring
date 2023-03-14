@@ -12,7 +12,7 @@ app = Flask(__name__)
 _INF = float("inf")
 
 graphs = {}
-graphs['c'] = Counter('python_request_operations_total', 'The total number of processed requests')
+graphs['c'] = Counter('python_request_operations_total', 'The total number of processed request')
 graphs['h'] = Histogram('python_request_duration_seconds', 'Histogram for the duration in seconds.', buckets=(1, 2, 5, 6, 10, _INF))
 
 
